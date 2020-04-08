@@ -19,8 +19,8 @@ public class CardTest extends TestCase {
 
     @org.junit.Test
     public void testCardConstructorWithEnums() {
+        // Test constructing a card with enums and getter methods.
         Card card = new Card(Rank.TWO, Suit.CLUBS);
-        // Test Rank, Suit, and toString methods
         assertTrue( "getRank() returns correct rank." , card.getRank() == Rank.TWO );
         assertTrue( "getRankAsChar() returns correct rank char." , card.getRankAsChar().equals("2") );
         assertTrue( "getSuit() returns correct suit." , card.getSuit() == Suit.CLUBS );
@@ -30,31 +30,37 @@ public class CardTest extends TestCase {
 
     @org.junit.Test
     public void testCardConstructorWithStrings() {
+        // Test constructing a card with cardString and getter methods.
         Card card = new Card("2C");
-        // Test Rank, Suit, and toString methods
         assertTrue( "getRank() returns correct rank:Rank.TWO" , card.getRank() == Rank.TWO );
         assertTrue( "getRankAsChar() returns correct rank char:2" , card.getRankAsChar().equals("2") );
+        assertTrue( "getSuit() returns correct suit:Suit.CLUBS" , card.getSuit() == Suit.CLUBS );
+        assertTrue( "getSuitAsChar() returns correct suit char:C", card.getSuitAsChar().equals("C"));
+
+        card = new Card("9C");
+        assertTrue( "getRank() returns correct rank:Rank.NINE" , card.getRank() == Rank.NINE );
+        assertTrue( "getRankAsChar() returns correct rank char:2" , card.getRankAsChar().equals("9") );
         assertTrue( "getSuit() returns correct suit:Suit.CLUBS" , card.getSuit() == Suit.CLUBS );
         assertTrue( "getSuitAsChar() returns correct suit char:C", card.getSuitAsChar().equals("C"));
     }
 
     @org.junit.Test
     public void testCardConstructorTenRank(){
-        Card card = new Card("10H");
-
+        Card card = new Card("TH");
+        // Test constructing a card with cardString and getter methods.
         assertTrue( "getRank() returns correct rank:Rank.TEN" , card.getRank() == Rank.TEN );
-        assertTrue( "getRankAsChar() returns correct rank char:10" , card.getRankAsChar().equals("10"));
+        assertTrue( "getRankAsChar() returns correct rank char:10" , card.getRankAsChar().equals("T"));
         assertTrue( "getSuit() returns correct suit:Suit.HEARTS", card.getSuit() == Suit.HEARTS);
         assertTrue( "getSuitAsChar() returns correct suit char:H", card.getSuitAsChar().equals("H"));
 
     }
 
     @org.junit.Test
-    public void testCardConstructorFaceCards(){
-        Card card = new Card("KH");
-
-        assertTrue( "getRank() returns correct rank:Rank.KING Returns:" , card.getRank() == Rank.KING );
-        assertTrue( "getRankAsChar() returns correct rank char:K" , card.getRankAsChar().equals("K") );
+    public void testCardConstructorFaceCard(){
+        // Test constructing a face card
+        Card card = new Card("AH");
+        assertTrue( "getRank() returns correct rank:Rank.ACE" , card.getRank() == Rank.ACE );
+        assertTrue( "getRankAsChar() returns correct rank char:A" , card.getRankAsChar().equals("A") );
         assertTrue( "getSuit() returns correct suit:Suit.HEARTS", card.getSuit() == Suit.HEARTS);
         assertTrue( "getSuitAsChar() returns correct suit char:H", card.getSuitAsChar().equals("H"));
 
