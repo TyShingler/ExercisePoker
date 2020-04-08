@@ -18,6 +18,14 @@ public class CardTest extends TestCase {
     }
 
     @org.junit.Test
+    public void testIsValidateCardString(){
+        assertTrue("2C is a valid cardString.", Card.isValidateCardString("2C"));
+        assertTrue("9D is a valid cardString.", Card.isValidateCardString("9D"));
+        assertTrue("TH is a valid cardString.", Card.isValidateCardString("TH"));
+        assertTrue("AS is a valid cardString.", Card.isValidateCardString("AS"));
+    }
+
+    @org.junit.Test
     public void testCardConstructorWithEnums() {
         // Test constructing a card with enums and getter methods.
         Card card = new Card(Rank.TWO, Suit.CLUBS);

@@ -12,12 +12,12 @@ import java.util.regex.*;
 public class Card implements Comparable<Card> {
 
     // The number part of a playing card.
-    enum Rank {
+    public enum Rank {
         TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
     }
     private Rank rank;
 
-    enum Suit {
+    public enum Suit {
         HEARTS, CLUBS, DIAMONDS, SPADES
     }
     private Suit suit;
@@ -28,19 +28,21 @@ public class Card implements Comparable<Card> {
     }
 
     public Card(String cardString) {
-        validateCardString(cardString);
+        if (!isValidateCardString(cardString)) {
+            throw new IllegalArgumentException("cardString must satisfy the following regex expression /^\\d0?[H|C|D|S]$/ but got:" + cardString);
+        }
         
         this.rank = getRankFromCardString(cardString);
         this.suit = getSuitFromCardString(cardString);
     }
     
-    private static void validateCardString(String cardString) {
-        // @throws IllegalArgumentException For validating cardStrings
-        if (cardString == null || cardString == ""){
-            throw new IllegalArgumentException("cardString most not be empty or null!");
-        }else if (!Pattern.matches("^([2-9]|[T|J|Q|K|A])[H|C|D|S]$", cardString)){
-            throw new IllegalArgumentException("cardString must satisfy the following regex expression /^\\d0?[H|C|D|S]$/");
+    protected static boolean isValidateCardString(String cardString) {
+        // @throws IllegalArgumentException for invalidating cardStrings
+        if (cardString == null || cardString == "" || 
+                !Pattern.matches("^([2-9]|[T|J|Q|K|A])[H|C|D|S]$", cardString)){
+            return false;
         }
+        return true;
     }
 
     private static Rank getRankFromCardString(String cardString) {
@@ -70,6 +72,10 @@ public class Card implements Comparable<Card> {
     @Override
     public int compareTo(Card o) {
         // Override compareTo() to make one Card comparable to another Card
+        // Compares by Rank then Suit
+        if (this.rank.compareTo(o.rank) == 0){
+            return this.suit.compareTo(o.suit);
+        }
         return this.rank.compareTo(o.rank);
     }
 
