@@ -3,7 +3,7 @@ package com.shingler.poker;
 import java.util.regex.*;
 
 /**
- * The Card class is one of the fundamanetal classes for the poker excersize. It
+ * The Card class is one of the fundamental classes for the poker exercise. It
  * is comparable witch will help will evaluating a poker hand later. 
  * 
  * @author Tyler Shingler
@@ -18,7 +18,7 @@ public class Card implements Comparable<Card> {
     private Rank rank;
 
     enum Suit {
-        HEARTS, CLUBS, DIAMANDS, SPADES
+        HEARTS, CLUBS, DIAMONDS, SPADES
     }
     private Suit suit;
 
@@ -72,7 +72,7 @@ public class Card implements Comparable<Card> {
         if (suitChar.equals("C"))
             return Suit.CLUBS;
         if (suitChar.equals("D"))
-            return Suit.DIAMANDS;
+            return Suit.DIAMONDS;
         return Suit.SPADES;
     }
 
@@ -94,7 +94,7 @@ public class Card implements Comparable<Card> {
             return true;
         }
 
-        // Is this an instnace of Card?
+        // Is this an instance of Card?
         if (!(o instanceof Card)) {
             return false;
         }
@@ -113,7 +113,7 @@ public class Card implements Comparable<Card> {
             return "H";
         if (suit == Suit.CLUBS)
             return "C";
-        if (suit == Suit.DIAMANDS)
+        if (suit == Suit.DIAMONDS)
             return "D";
         if (suit == Suit.SPADES)
             return "S";
