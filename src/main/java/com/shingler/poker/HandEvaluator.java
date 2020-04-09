@@ -17,6 +17,8 @@ public class HandEvaluator {
         if (cardArray.size() != handSize){
             return false;
         }
+
+        // There are no duplicates in the hand.
         Collections.sort(cardArray);
         String compare = "";
         for(Card card : cardArray){
@@ -32,20 +34,23 @@ public class HandEvaluator {
     }
 
     protected static ArrayList<Card> findPair(ArrayList<Card> cardArray){
-        ArrayList<Card> pair = cardsInARow(cardArray, 2);
+        ArrayList<Card> pair = findCardsInARow(cardArray, 2);
         Collections.sort(pair);
         return pair;
     }
 
     protected static ArrayList<Card> findTwoPairs(ArrayList<Card> cardArray){
-        ArrayList<Card> firstPair = cardsInARow(cardArray, 2);
-
+        // Find the first pair.
+        ArrayList<Card> firstPair = findCardsInARow(cardArray, 2);
         if (firstPair == null) return null;
-        ArrayList<Card> copy = cardArray;
 
+        // Clone so cardArray is not changed and remove the first pair.
+        ArrayList<Card> copy = (ArrayList<Card>)cardArray.clone();
         copy.removeAll(firstPair);
 
-        ArrayList<Card> secondPair = cardsInARow(cardArray, 2);
+        // Find the second pair.
+        ArrayList<Card> secondPair = findCardsInARow(copy, 2);
+
         if (secondPair != null) {
             firstPair.addAll(secondPair);
             Collections.sort(firstPair);
@@ -55,7 +60,7 @@ public class HandEvaluator {
     }
 
     protected static ArrayList<Card> findThreeOfAKind(ArrayList<Card> cardArray){
-        ArrayList<Card> threeOfAKind = cardsInARow(cardArray, 3);
+        ArrayList<Card> threeOfAKind = findCardsInARow(cardArray, 3);
         Collections.sort(threeOfAKind);
         return threeOfAKind;
     }    
@@ -65,12 +70,15 @@ public class HandEvaluator {
         int previousRank = -5;
         int currentRank = -5;
         int count = 0;
+        // For every card...
         for (Card card : cardArray) {
+            // Update the current rank...
             currentRank = card.getRank().ordinal();
+            // If the current rank is one higher than the previous rank increment count.
             if(currentRank == previousRank + 1) count++;
             previousRank = currentRank;
         }
-
+        // In this case if its a straight, count must be four.
         return (count == 4) ? cardArray : null ;
     }
 
@@ -83,15 +91,18 @@ public class HandEvaluator {
     }
 
     protected static ArrayList<Card> findFullHouse(ArrayList<Card> cardArray){
-        ArrayList<Card> threeOfAKind = cardsInARow(cardArray, 3);
+        // Find the three of a kinda first.
+        ArrayList<Card> threeOfAKind = findCardsInARow(cardArray, 3);
         if(threeOfAKind == null){
             return null;
         }
 
+        // Copy so we don't change cardArray and remove the three a kinda.
         ArrayList<Card> copy = (ArrayList<Card>) cardArray.clone();
         copy.removeAll(threeOfAKind);
 
-        ArrayList<Card> pair = cardsInARow(copy, 2);
+        // If all that is left is a pair then we have a full house!
+        ArrayList<Card> pair = findCardsInARow(copy, 2);
         if(pair != null) {
             pair.addAll(threeOfAKind);
             Collections.sort(pair);
@@ -102,7 +113,7 @@ public class HandEvaluator {
     }
 
     protected static ArrayList<Card> findFourOfAKind(ArrayList<Card> cardArray){
-        ArrayList<Card> result = cardsInARow(cardArray, 4);
+        ArrayList<Card> result = findCardsInARow(cardArray, 4);
         Collections.sort(result);
         return result;
     }
@@ -114,18 +125,26 @@ public class HandEvaluator {
         return null;
     }
 
-    protected static ArrayList<Card> cardsInARow(ArrayList<Card> cardArray, int inARow){
+    protected static ArrayList<Card> findCardsInARow(ArrayList<Card> cardArray, int ofAKind){
         Collections.sort(cardArray);
         ArrayList<Card> result = new ArrayList<Card>();
         Card previousCard = getCardOfDifferentRank(cardArray.get(0));
+
+        // For ever card...
         for (Card card : cardArray) {
+            // If the previous card's rank equals this card's rank...
             if(previousCard.getRankAsChar().equals(card.getRankAsChar())){
+                // We are on a streak!
                 result.add(card);
+                // We need to account for the start of a steak.
                 if(!result.contains(previousCard)) result.add(previousCard);
-                if(result.size() == inARow){
+                // If we found ofAKind card's return them.
+                if(result.size() == ofAKind){
                     return result;
                 } 
+            // If this card and the previous card's ranks are different and this results list is not empty.
             } else if(!result.isEmpty()) {
+                // Clear results list bigger streak may be left.
                 result = new ArrayList<Card>();
             }
             previousCard = card;
