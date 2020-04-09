@@ -1,6 +1,7 @@
 package com.shingler.poker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -25,82 +26,157 @@ public class HandEvaluatorTest extends TestCase{
     }
 
     @org.junit.Test
-    public void test(){
-        Card[] cardArray = {new Card(""), new Card(""), new Card(""), new Card(""), new Card("")}; 
-        assertTrue("Test Example", false);
-    }
-
-    @org.junit.Test
     public void testValidateHand(){
-        Card[] cardArray = {new Card("AH"), new Card("9H"), new Card("9S"), new Card("9H"), new Card("AH")}; 
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("AH"));
+        cardArray.add(new Card("9H"));
+        cardArray.add(new Card("AS"));
+        cardArray.add(new Card("9H"));
+        cardArray.add(new Card("AH"));
         assertTrue("No duplicate cards.", HandEvaluator.isValidateHand(cardArray) == false);
     }
 
     @org.junit.Test
     public void testFindHighCard(){
-        Card[] cardArray = {new Card("AH"), new Card("KC"), new Card("QD"), new Card("QD"), new Card("QC")}; 
-        assertTrue("Finds AH as the High Card.", HandEvaluator.findHighCard(cardArray) == new Card("AH") );
+        
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("AH"));
+        cardArray.add(new Card("KC"));
+        cardArray.add(new Card("QD"));
+        cardArray.add(new Card("QD"));
+        cardArray.add(new Card("QC"));
+        assertTrue("Finds AH as the High Card.", HandEvaluator.findHighCard(cardArray).equals(new Card("AH")) );
     }
 
     @org.junit.Test
     public void testFindPair(){
-        Card[] cardArray = {new Card("JC"), new Card("JD"), new Card("2D"), new Card("3D"), new Card("3C")};
-        Card[] expected = {new Card("JC"), new Card("JD")};
-        Arrays.sort(expected);
-        assertTrue("Finds one pair.", HandEvaluator.findPair(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("JC"));
+        cardArray.add(new Card("JD"));
+        cardArray.add(new Card("2D"));
+        cardArray.add(new Card("3D"));
+        cardArray.add(new Card("3C"));
+        ArrayList<Card> expected = new ArrayList<Card>();
+        expected.add(new Card("3D"));
+        expected.add(new Card("3C"));
+        Collections.sort(expected);
+        assertTrue("Finds one pair.", HandEvaluator.findPair(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testFindTwoPairs(){
-        Card[] cardArray = {new Card("JC"), new Card("JD"), new Card("3D"), new Card("2D"), new Card("3C")};
-        Card[] expected = {new Card("JC"), new Card("JD"), new Card("3D"), new Card("3C")};
-        Arrays.sort(expected);
-        assertTrue("Finds find the two pair.", HandEvaluator.findTwoPairs(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("JC"));
+        cardArray.add(new Card("JD"));
+        cardArray.add(new Card("3D"));
+        cardArray.add(new Card("2D"));
+        cardArray.add(new Card("3C"));
+        ArrayList<Card> expected = new ArrayList<Card>();
+        expected.add(new Card("JC"));
+        expected.add(new Card("JD"));;
+        expected.add(new Card("3C"));
+        expected.add(new Card("3D"));
+        Collections.sort(expected);
+        assertTrue("Finds find the two pair.", HandEvaluator.findTwoPairs(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testFindThreeOfAKind(){
-        Card[] cardArray = {new Card("TC"), new Card("TD"), new Card("TS"), new Card("3D"), new Card("4C")};
-        Card[] expected = {new Card("TC"), new Card("TD"), new Card("TS")};
-        Arrays.sort(expected);
-        assertTrue("Finds find three of a kind.", HandEvaluator.findThreeOfAKind(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("TC"));
+        cardArray.add(new Card("TD"));
+        cardArray.add(new Card("TS"));
+        cardArray.add(new Card("3D"));
+        cardArray.add(new Card("4C"));
+        ArrayList<Card> expected = new ArrayList<Card>();
+        expected.add(new Card("TC"));
+        expected.add(new Card("TD"));
+        expected.add(new Card("TS"));
+        Collections.sort(expected);
+        assertTrue("Finds find three of a kind.", HandEvaluator.findThreeOfAKind(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testFindStraight(){
-        Card[] cardArray = {new Card("2H"), new Card("4D"), new Card("6C"), new Card("3C"), new Card("5D")};
-        Card[] expected = {new Card("2H"), new Card("3C"), new Card("4D"), new Card("5D"), new Card("6C")};
-        Arrays.sort(expected);
-        assertTrue("Finds find the straight.", HandEvaluator.findStraight(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("2H"));
+        cardArray.add(new Card("4D"));
+        cardArray.add(new Card("6C"));
+        cardArray.add(new Card("3C"));
+        cardArray.add(new Card("5D"));
+        ArrayList<Card> expected = new ArrayList<Card>();
+        expected.add(new Card("2H"));
+        expected.add(new Card("3C"));
+        expected.add(new Card("4D"));
+        expected.add(new Card("5D"));
+        expected.add(new Card("6C"));
+        Collections.sort(expected);
+        assertTrue("Finds find the straight.", HandEvaluator.findStraight(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testIsFlush(){
-        Card[] cardArray = {new Card("AH"), new Card("KH"), new Card("QH"), new Card("3H"), new Card("6H")};
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("AH"));
+        cardArray.add(new Card("KH"));
+        cardArray.add(new Card("QH"));
+        cardArray.add(new Card("3H"));
+        cardArray.add(new Card("6H"));
         assertTrue("Test find the flush.", HandEvaluator.isFlush(cardArray));
     }
 
     @org.junit.Test
     public void testFindFullHouse(){
-        Card[] cardArray = {new Card("AH"), new Card("QD"), new Card("AC"), new Card("QD"), new Card("QC")};
-        Card[] expected = {new Card("AH"), new Card("QD"), new Card("AC"), new Card("QD"), new Card("QC")};
-        Arrays.sort(expected);
-        assertTrue("Finds find the full house.", HandEvaluator.findFullHouse(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("AH"));
+        cardArray.add(new Card("QD"));
+        cardArray.add(new Card("AC"));
+        cardArray.add(new Card("QD"));
+        cardArray.add(new Card("QC"));
+        ArrayList<Card> expected = cardArray;
+        Collections.sort(expected);
+        assertTrue("Finds find the full house.", HandEvaluator.findFullHouse(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testFindFourOfAKind(){
-        Card[] cardArray = {new Card("AH"), new Card("AD"), new Card("AC"), new Card("AS"), new Card("QC")};
-        Card[] expected = {new Card("AH"), new Card("AD"), new Card("AC"), new Card("AS")};
-        Arrays.sort(expected);
-        assertTrue("Finds four of a Kind.", HandEvaluator.findFourOfAKind(cardArray) == expected);
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("AH"));
+        cardArray.add(new Card("AD"));
+        cardArray.add(new Card("AC"));
+        cardArray.add(new Card("AS"));
+        cardArray.add(new Card("QC"));
+        ArrayList<Card> expected = new ArrayList<Card>();
+        expected.add(new Card("AH"));
+        expected.add(new Card("AD"));
+        expected.add(new Card("AC"));
+        expected.add(new Card("AS"));
+        Collections.sort(expected);
+        assertTrue("Finds four of a Kind.", HandEvaluator.findFourOfAKind(cardArray).equals(expected));
     }
 
     @org.junit.Test
     public void testFindStraightFlush(){
-        Card[] cardArray = {new Card("2H"), new Card("4H"), new Card("6H"), new Card("3H"), new Card("5H")};
-        Card[] expected = {new Card("2H"), new Card("3H"), new Card("4H"), new Card("5H"), new Card("6H")};
+        ArrayList<Card> cardArray = new ArrayList<Card>();
+        cardArray.add(new Card("2H"));
+        cardArray.add(new Card("4H"));
+        cardArray.add(new Card("6H"));
+        cardArray.add(new Card("3H"));
+        cardArray.add(new Card("5H"));
+        ArrayList<Card> expected = cardArray;
+        Collections.sort(expected);
+        assertTrue("Finds the straight flush.", HandEvaluator.findStraightFlush(cardArray).equals(expected));
+    }
 
-        assertTrue("Finds the straight flush.", HandEvaluator.findStraight(cardArray) == expected);
+    @org.junit.Test
+    public void testGetCardOfADifferentRank() {
+        Card card = new Card("2C");
+        assertTrue("Returns a card this is not 2C", !HandEvaluator.getCardOfDifferentRank(card).equals(card));
+        card = new Card("5D");
+        assertTrue("Returns a card this is not 5D", !HandEvaluator.getCardOfDifferentRank(card).equals(card));
+        card = new Card("AC");
+        assertTrue("Returns a card this is not AC", !HandEvaluator.getCardOfDifferentRank(card).equals(card));
+        card = new Card("AH");
+        assertTrue("Returns a card this is not AH", !HandEvaluator.getCardOfDifferentRank(card).equals(card));
     }
 }
