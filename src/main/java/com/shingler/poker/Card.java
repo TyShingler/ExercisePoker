@@ -4,7 +4,7 @@ import java.util.regex.*;
 
 /**
  * The Card class is one of the fundamental classes for the poker exercise. It
- * is comparable witch will help will evaluating a poker hand later. 
+ * is comparable witch will help will evaluating a poker hand later.
  * 
  * @author Tyler Shingler
  * @version 1.0
@@ -15,11 +15,13 @@ public class Card implements Comparable<Card> {
     public enum Rank {
         TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
     }
+
     private Rank rank;
 
     public enum Suit {
         HEARTS, CLUBS, DIAMONDS, SPADES
     }
+
     private Suit suit;
 
     public Card(final Rank rank, final Suit suit) {
@@ -29,17 +31,17 @@ public class Card implements Comparable<Card> {
 
     public Card(String cardString) {
         if (!isValidateCardString(cardString)) {
-            throw new IllegalArgumentException("cardString must satisfy the following regex expression /^\\d0?[H|C|D|S]$/ but got:" + cardString);
+            throw new IllegalArgumentException(
+                    "cardString must satisfy the following regex expression /^\\d0?[H|C|D|S]$/ but got:" + cardString);
         }
-        
+
         this.rank = getRankFromCardString(cardString);
         this.suit = getSuitFromCardString(cardString);
     }
-    
+
     protected static boolean isValidateCardString(String cardString) {
         // @throws IllegalArgumentException for invalidating cardStrings.
-        if (cardString == null || cardString == "" || 
-                !Pattern.matches("^([2-9]|[T|J|Q|K|A])[H|C|D|S]$", cardString)){
+        if (cardString == null || cardString == "" || !Pattern.matches("^([2-9]|[T|J|Q|K|A])[H|C|D|S]$", cardString)) {
             return false;
         }
         return true;
@@ -48,19 +50,24 @@ public class Card implements Comparable<Card> {
     private static Rank getRankFromCardString(String cardString) {
         // Needs to subtract two because enum ordinals start at 0.
         String rankString = cardString.substring(0, 1);
-        if (Pattern.matches("^[TJQKA]$", rankString)){
-            if (rankString.equals("T")) return Rank.TEN;
-            if (rankString.equals("J")) return Rank.JACK;
-            if (rankString.equals("Q")) return Rank.QUEEN;
-            if (rankString.equals("K")) return Rank.KING;
-            if (rankString.equals("A")) return Rank.ACE;
+        if (Pattern.matches("^[TJQKA]$", rankString)) {
+            if (rankString.equals("T"))
+                return Rank.TEN;
+            if (rankString.equals("J"))
+                return Rank.JACK;
+            if (rankString.equals("Q"))
+                return Rank.QUEEN;
+            if (rankString.equals("K"))
+                return Rank.KING;
+            if (rankString.equals("A"))
+                return Rank.ACE;
         }
         return Rank.values()[Integer.parseInt(rankString) - 2];
     }
 
     private static Suit getSuitFromCardString(String cardString) {
         String suitChar = cardString.substring(1, 2);
-        if (suitChar.equals("H")) 
+        if (suitChar.equals("H"))
             return Suit.HEARTS;
         if (suitChar.equals("C"))
             return Suit.CLUBS;
@@ -73,13 +80,13 @@ public class Card implements Comparable<Card> {
     public int compareTo(Card o) {
         // Override compareTo() to make one Card comparable to another Card.
         // Compares by Rank then Suit.
-        if (this.rank.compareTo(o.rank) == 0){
+        if (this.rank.compareTo(o.rank) == 0) {
             return this.suit.compareTo(o.suit);
         }
         return this.rank.compareTo(o.rank);
     }
 
-    public boolean compareSuit(Card o){
+    public boolean compareSuit(Card o) {
         return this.suit == o.suit;
     }
 
@@ -120,7 +127,7 @@ public class Card implements Comparable<Card> {
     public String getRankAsChar() {
         if (rank.ordinal() < 8)
             return Integer.toString(rank.ordinal() + 2);
-        if (rank == Rank.TEN) 
+        if (rank == Rank.TEN)
             return "T";
         else if (rank == Rank.JACK)
             return "J";
@@ -133,6 +140,11 @@ public class Card implements Comparable<Card> {
         return "E";
     }
 
-    public Rank getRank(){ return rank; }
-    public Suit getSuit(){ return suit; }
+    public Rank getRank() {
+        return rank;
+    }
+
+    public Suit getSuit() {
+        return suit;
+    }
 }
