@@ -37,7 +37,7 @@ public class Card implements Comparable<Card> {
     }
     
     protected static boolean isValidateCardString(String cardString) {
-        // @throws IllegalArgumentException for invalidating cardStrings
+        // @throws IllegalArgumentException for invalidating cardStrings.
         if (cardString == null || cardString == "" || 
                 !Pattern.matches("^([2-9]|[T|J|Q|K|A])[H|C|D|S]$", cardString)){
             return false;
@@ -71,8 +71,8 @@ public class Card implements Comparable<Card> {
 
     @Override
     public int compareTo(Card o) {
-        // Override compareTo() to make one Card comparable to another Card
-        // Compares by Rank then Suit
+        // Override compareTo() to make one Card comparable to another Card.
+        // Compares by Rank then Suit.
         if (this.rank.compareTo(o.rank) == 0){
             return this.suit.compareTo(o.suit);
         }
@@ -85,7 +85,7 @@ public class Card implements Comparable<Card> {
 
     @Override
     public boolean equals(Object o) {
-        // Overriding equals() to compare two Cards
+        // Overriding equals() to compare two Cards.
         // Am I comparing to myself?
         if (o == this) {
             return true;
