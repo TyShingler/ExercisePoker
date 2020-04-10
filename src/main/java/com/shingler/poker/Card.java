@@ -1,6 +1,6 @@
 package com.shingler.poker;
 
-import java.util.regex.*;
+import java.util.regex.Pattern;
 
 /**
  * The Card class is one of the fundamental classes for the poker exercise. It
@@ -13,7 +13,7 @@ public class Card implements Comparable<Card> {
 
     // The number part of a playing card.
     public enum Rank {
-        TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, JACK, QUEEN, KING, ACE
+        Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace
     }
 
     private Rank rank;
@@ -52,15 +52,15 @@ public class Card implements Comparable<Card> {
         String rankString = cardString.substring(0, 1);
         if (Pattern.matches("^[TJQKA]$", rankString)) {
             if (rankString.equals("T"))
-                return Rank.TEN;
+                return Rank.Ten;
             if (rankString.equals("J"))
-                return Rank.JACK;
+                return Rank.Jack;
             if (rankString.equals("Q"))
-                return Rank.QUEEN;
+                return Rank.Queen;
             if (rankString.equals("K"))
-                return Rank.KING;
+                return Rank.King;
             if (rankString.equals("A"))
-                return Rank.ACE;
+                return Rank.Ace;
         }
         return Rank.values()[Integer.parseInt(rankString) - 2];
     }
@@ -127,15 +127,15 @@ public class Card implements Comparable<Card> {
     public String getRankAsChar() {
         if (rank.ordinal() < 8)
             return Integer.toString(rank.ordinal() + 2);
-        if (rank == Rank.TEN)
+        if (rank == Rank.Ten)
             return "T";
-        else if (rank == Rank.JACK)
+        else if (rank == Rank.Jack)
             return "J";
-        else if (rank == Rank.QUEEN)
+        else if (rank == Rank.Queen)
             return "Q";
-        else if (rank == Rank.KING)
+        else if (rank == Rank.King)
             return "K";
-        else if (rank == Rank.ACE)
+        else if (rank == Rank.Ace)
             return "A";
         return "E";
     }

@@ -2,6 +2,8 @@ package com.shingler.poker;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.shingler.poker.HandEvaluator.order;
 
@@ -24,6 +26,67 @@ public class HandEvaluatorTest extends TestCase {
 
     @org.junit.Test
     public void testEvaluate() {
+        String testString0 = "Black: 2H 4H 6H 3H 5H  White: AH KH QH 7H 8H";
+        String testString1 = "Black: 2H 4S 4C 2D 4H  White: 2S 8S AS QS 3S";
+        String testString2 = "Black: 2H 3D 5S 9C KD  White: 2C 3H 4S 8C KH";
+        String testString3 = "Black: 2H 3D 5S 9C KD  White: 2D 2S 2C 9S KH";
+        String testString4 = "Black: 2H 3D 5S 9C KD  White: 2C 3H 4S 8C AH";
+        String testString5 = "Black: 2C 3D 5S 9C KD  White: 2H 3H 4H 8H AH";
+        
+
+        assertTrue("Should return black as winner.", HandEvaluator.evaluate(testString0).equals("Black wins. -with straight flush: 2H 3H 4H 5H 6H"));
+        assertTrue("Should return black as winner.", HandEvaluator.evaluate(testString1).equals("Black wins. -with full house: 2H 2D 4H 4C 4S"));
+        assertTrue("Should return Tie."            , HandEvaluator.evaluate(testString2).equals("Tie."));
+        assertTrue("Should return White as winner.", HandEvaluator.evaluate(testString3).equals("White wins. -with three of a kind: 2C 2D 2S"));
+        assertTrue("Should return White as winner.", HandEvaluator.evaluate(testString4).equals("White wins. -with high card: Ace"));
+        assertTrue("Should return White as winner.", HandEvaluator.evaluate(testString5).equals("White wins. -with flush"));
+    }
+
+    @org.junit.Test
+    public void testRegexPattern() {
+        String testString0 = "Black: 2H 4H 6H 3H 5H  White: AH KH QH 7H 8H";
+        String inValid = "ASDGFAGDFasdfasfda";
+        String regex = "(Black|White):((?:\s[[2-9]|[A|K|Q|J|T]][H|D|S|C])+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(testString0);
+        assertTrue("Regex passes valid strings.", matcher.find());
+        matcher = pattern.matcher(inValid);
+        assertTrue("Regex dose not pass valid strings.", !Pattern.matches(regex, inValid));
+    }
+
+    @org.junit.Test
+    public void testGetHandFromMatcher() {
+        ArrayList<Card> black = new ArrayList<Card>();
+        black.add(new Card("2H"));
+        black.add(new Card("4H"));
+        black.add(new Card("6H"));
+        black.add(new Card("3H"));
+        black.add(new Card("5H"));
+        String userIn = "Black: 2H 4H 6H 3H 5H";
+
+        String regex = "(Black|White):((?:\\s[[2-9]|[A|K|Q|J|T]][H|D|S|C])+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(userIn);
+
+        assertTrue("GetHandFromMatcher should return 2H 4H 6H 3H 5H as current hand.", HandEvaluator.getHandFromMatcher(matcher).equals(black));
+
+        HandEvaluator.validateHand(black);
+
+        ArrayList<Card> white = new ArrayList<Card>();
+        white.add(new Card("AH"));
+        white.add(new Card("KH"));
+        white.add(new Card("QH"));
+        white.add(new Card("7H"));
+        white.add(new Card("8H"));
+
+        HandEvaluator.validateHand(white);
+
+        assertTrue("Should return correct winner text for the hands.",
+                HandEvaluator.compareHands(black, white).equals("Black wins. -with straight flush: 2H 3H 4H 5H 6H"));
+    }
+
+    @org.junit.Test
+    public void testCompareHands() {
         ArrayList<Card> black = new ArrayList<Card>();
         black.add(new Card("2H"));
         black.add(new Card("4H"));
@@ -43,7 +106,7 @@ public class HandEvaluatorTest extends TestCase {
         HandEvaluator.validateHand(white);
 
         assertTrue("Should return correct winner text for the hands.",
-                HandEvaluator.evaluate(black, white).equals("Black wins. -with straight flush: 2H 3H 4H 5H 6H"));
+                HandEvaluator.compareHands(black, white).equals("Black wins. -with straight flush: 2H 3H 4H 5H 6H"));
     }
 
     @org.junit.Test
@@ -98,7 +161,7 @@ public class HandEvaluatorTest extends TestCase {
         cardArray.add(new Card("QD"));
         cardArray.add(new Card("QD"));
         cardArray.add(new Card("QC"));
-        assertTrue("Finds AH as the High Card.", HandEvaluator.findHighCard(cardArray).equals(new Card("AH")));
+        assertTrue("Finds AH as the High Card.", HandEvaluator.findHighCard(cardArray).get(0).equals(new Card("AH")));
 
         cardArray = new ArrayList<Card>();
         cardArray.add(new Card("2H"));
@@ -106,7 +169,7 @@ public class HandEvaluatorTest extends TestCase {
         cardArray.add(new Card("2D"));
         cardArray.add(new Card("2S"));
         cardArray.add(new Card("3H"));
-        assertTrue("Finds 3H as the High Card.", HandEvaluator.findHighCard(cardArray).equals(new Card("3H")));
+        assertTrue("Finds 3H as the High Card.", HandEvaluator.findHighCard(cardArray).get(0).equals(new Card("3H")));
     }
 
     @org.junit.Test

@@ -2,6 +2,8 @@ package com.shingler.poker;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.shingler.poker.Card.Rank;
 import com.shingler.poker.HandEvaluator.order;
@@ -10,7 +12,34 @@ public class HandEvaluator {
 
     private static int handSize = 5;
 
-    public static String evaluate(ArrayList<Card> black, ArrayList<Card> white) {
+    public static String evaluate(String userIn) {
+
+        String regex = "(Black|White):((?:\s[[2-9]|[A|K|Q|J|T]][H|D|S|C])+)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(userIn);
+        if (!matcher.find()) {
+            return "[Error] Invalid format.";
+        }
+        pattern = Pattern.compile(regex);
+        matcher = pattern.matcher(userIn);
+
+        ArrayList<Card> black = getHandFromMatcher(matcher);
+        ArrayList<Card> white = getHandFromMatcher(matcher);
+
+        return compareHands(black, white);
+    }
+
+    static ArrayList<Card> getHandFromMatcher(Matcher matcher) {
+        matcher.find();
+        String[] rawHand = matcher.group(2).trim().split(" ");
+        ArrayList<Card> hand = new ArrayList<Card>();
+        for (String cardString : rawHand) {
+            hand.add(new Card(cardString));
+        }
+        return hand;
+    }
+
+    static String compareHands(ArrayList<Card> black, ArrayList<Card> white) {
         ArrayList<Card> validityCheck = (ArrayList<Card>) black.clone();
         validityCheck.addAll(white);
         if (!validateHands(validityCheck)) {
@@ -18,67 +47,67 @@ public class HandEvaluator {
         }
 
         Result blackResult = getEvaluation(black);
-        Result whitResult = getEvaluation(white);
+        Result whiteResult = getEvaluation(white);
 
-        if (blackResult.rank.ordinal() > whitResult.rank.ordinal()) {
+        if (blackResult.rank.ordinal() > whiteResult.rank.ordinal()) {
             return "Black wins. -" + blackResult.winnerText;
+        } else if (blackResult.rank.ordinal() == whiteResult.rank.ordinal()) {
+            Card blackHighCard = findHighCard(blackResult.cardsUsed).get(0);
+            Card whiteHighCard = findHighCard(whiteResult.cardsUsed).get(0);
+            if (blackHighCard.getRank().compareTo(whiteHighCard.getRank()) > 0) {
+                return "Black wins. -" + blackResult.winnerText;
+            } else if(blackHighCard.getRank().compareTo(whiteHighCard.getRank()) < 0){
+                return "White wins. -" + whiteResult.winnerText;
+            } else {
+                return "Tie.";
+            }
         }
-        return "White wins. -" + whitResult.winnerText;
+        return "White wins. -" + whiteResult.winnerText;
     }
 
     static Result getEvaluation(ArrayList<Card> handIn) {
         ArrayList<Card> hand = new ArrayList<Card>();
+        Result result = new Result();
         if ((hand = findStraightFlush(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.STRAIGHTFLUSH;
             result.winnerText = "with straight flush: " + cardArrayToString(hand);
-            return result;
         } else if ((hand = findFourOfAKind(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.FOUROFAKIND;
             result.winnerText = "with four of a kind: " + cardArrayToString(hand);
-            return result;
         } else if ((hand = findFullHouse(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.FULLHOUSE;
             result.winnerText = "with full house: " + cardArrayToString(hand);
-            return result;
         } else if (isFlush(handIn)) {
-            Result result = new Result();
             result.rank = order.FLUSH;
-            result.winnerText = "with flush: " + cardArrayToString(handIn);
-            return result;
+            result.winnerText = "with flush";
         } else if ((hand = findStraight(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.STRAIGHT;
             result.winnerText = "with straight: " + cardArrayToString(hand);
-            return result;
         } else if ((hand = findThreeOfAKind(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.THREEOFAKIND;
             result.winnerText = "with three of a kind: " + cardArrayToString(hand);
-            return result;
         } else if ((hand = findTwoPairs(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.TWOPAIRS;
             result.winnerText = "with two pair: " + cardArrayToString(hand);
-            return result;
         } else if ((hand = findPair(handIn)) != null) {
-            Result result = new Result();
             result.rank = order.PAIR;
             result.winnerText = "with pair: " + cardArrayToString(hand);
-            return result;
-        } else if (findHighCard(handIn) != null) {
-            Result result = new Result();
+        } else if ((hand = findHighCard(handIn)) != null) {
             result.rank = order.HIGHCARD;
-            result.winnerText = "with high card: " + findHighCard(handIn).toString();
+            if (hand.get(0).getRank().ordinal() < 9) {
+                result.winnerText = "with high card: " + findHighCard(handIn).get(0).getRankAsChar();
+            } else {
+                result.winnerText = "with high card: " + findHighCard(handIn).get(0).getRank().toString();
+            }
+        }
+
+        if (result.rank != null) {
+            result.cardsUsed = hand;
             return result;
         }
-        Result result = new Result();
         result.rank = order.ERROR;
         result.winnerText = "[ERROR] Hand could not be evaluated";
         return result;
-
     }
 
     static String cardArrayToString(ArrayList<Card> cardArray) {
@@ -89,7 +118,7 @@ public class HandEvaluator {
         return out.trim();
     }
 
-    private static boolean hasRepeatingCards(ArrayList<Card> cardArray){
+    private static boolean hasRepeatingCards(ArrayList<Card> cardArray) {
         // There are no duplicates in the hand.
         Collections.sort(cardArray);
         String compare = "";
@@ -117,9 +146,11 @@ public class HandEvaluator {
         return !hasRepeatingCards(cardArray);
     }
 
-    static Card findHighCard(ArrayList<Card> cardArray) {
+    static ArrayList<Card> findHighCard(ArrayList<Card> cardArray) {
         Collections.sort(cardArray);
-        return cardArray.get(cardArray.size() - 1);
+        ArrayList<Card> card = new ArrayList<Card>();
+        card.add(cardArray.get(cardArray.size() - 1));
+        return card;
     }
 
     static ArrayList<Card> findPair(ArrayList<Card> cardArray) {
@@ -254,7 +285,7 @@ public class HandEvaluator {
 
     static Card getCardOfDifferentRank(Card card) {
         int currentRank = card.getRank().ordinal();
-        if (currentRank == Rank.ACE.ordinal()) {
+        if (currentRank == Rank.Ace.ordinal()) {
             return new Card("2C");
         } else {
             return new Card("AC");
@@ -270,4 +301,5 @@ public class HandEvaluator {
 class Result {
     public order rank;
     public String winnerText;
+    public ArrayList<Card> cardsUsed;
 };

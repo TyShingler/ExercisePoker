@@ -28,8 +28,8 @@ public class CardTest extends TestCase {
     @org.junit.Test
     public void testCardConstructorWithEnums() {
         // Test constructing a card with enums and getter methods.
-        Card card = new Card(Rank.TWO, Suit.CLUBS);
-        assertTrue( "getRank() returns correct rank." , card.getRank() == Rank.TWO );
+        Card card = new Card(Rank.Two, Suit.CLUBS);
+        assertTrue( "getRank() returns correct rank." , card.getRank() == Rank.Two );
         assertTrue( "getRankAsChar() returns correct rank char." , card.getRankAsChar().equals("2") );
         assertTrue( "getSuit() returns correct suit." , card.getSuit() == Suit.CLUBS );
         assertTrue( "getSuitAsChar() returns correct suit char.", card.getSuitAsChar().equals("C"));
@@ -40,13 +40,13 @@ public class CardTest extends TestCase {
     public void testCardConstructorWithStrings() {
         // Test constructing a card with cardString and getter methods.
         Card card = new Card("2C");
-        assertTrue( "getRank() returns correct rank:Rank.TWO" , card.getRank() == Rank.TWO );
+        assertTrue( "getRank() returns correct rank:Rank.TWO" , card.getRank() == Rank.Two );
         assertTrue( "getRankAsChar() returns correct rank char:2" , card.getRankAsChar().equals("2") );
         assertTrue( "getSuit() returns correct suit:Suit.CLUBS" , card.getSuit() == Suit.CLUBS );
         assertTrue( "getSuitAsChar() returns correct suit char:C", card.getSuitAsChar().equals("C"));
 
         card = new Card("9C");
-        assertTrue( "getRank() returns correct rank:Rank.NINE" , card.getRank() == Rank.NINE );
+        assertTrue( "getRank() returns correct rank:Rank.NINE" , card.getRank() == Rank.Nine );
         assertTrue( "getRankAsChar() returns correct rank char:2" , card.getRankAsChar().equals("9") );
         assertTrue( "getSuit() returns correct suit:Suit.CLUBS" , card.getSuit() == Suit.CLUBS );
         assertTrue( "getSuitAsChar() returns correct suit char:C", card.getSuitAsChar().equals("C"));
@@ -56,7 +56,7 @@ public class CardTest extends TestCase {
     public void testCardConstructorTenRank(){
         Card card = new Card("TH");
         // Test constructing a card with cardString and getter methods.
-        assertTrue( "getRank() returns correct rank:Rank.TEN" , card.getRank() == Rank.TEN );
+        assertTrue( "getRank() returns correct rank:Rank.TEN" , card.getRank() == Rank.Ten );
         assertTrue( "getRankAsChar() returns correct rank char:10" , card.getRankAsChar().equals("T"));
         assertTrue( "getSuit() returns correct suit:Suit.HEARTS", card.getSuit() == Suit.HEARTS);
         assertTrue( "getSuitAsChar() returns correct suit char:H", card.getSuitAsChar().equals("H"));
@@ -67,7 +67,7 @@ public class CardTest extends TestCase {
     public void testCardConstructorFaceCard(){
         // Test constructing a face card
         Card card = new Card("AH");
-        assertTrue( "getRank() returns correct rank:Rank.ACE" , card.getRank() == Rank.ACE );
+        assertTrue( "getRank() returns correct rank:Rank.ACE" , card.getRank() == Rank.Ace );
         assertTrue( "getRankAsChar() returns correct rank char:A" , card.getRankAsChar().equals("A") );
         assertTrue( "getSuit() returns correct suit:Suit.HEARTS", card.getSuit() == Suit.HEARTS);
         assertTrue( "getSuitAsChar() returns correct suit char:H", card.getSuitAsChar().equals("H"));
